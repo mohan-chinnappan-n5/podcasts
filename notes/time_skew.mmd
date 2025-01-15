@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant Server1 as Server 1
+    participant Server2 as Server 2
+    participant Client as Client Request
+
+    Note over Server1,Server2: Each server has its own clock
+    Server1->>Client: Respond with Timestamp: 1678901234567
+    Server2->>Client: Respond with Timestamp: 1678901234566
+    Note over Client: Server 2's clock is slightly behind Server 1
+    Client->>Server1: Request for Unique ID
+    Server1->>Client: Generated ID: 1678901234567
+    Client->>Server2: Request for Unique ID
+    Server2->>Client: Generated ID: 1678901234566
+    Note over Client: Timestamps overlap due to skew
+    Client->>Application: Logs duplicate IDs in the database
+    Note over Application: Duplicate IDs cause conflicts
